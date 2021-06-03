@@ -8,7 +8,13 @@ const navigator = createStackNavigator(
   {
     Home: HomeScreen,
     Search: SearchScreen,
-    Details: SearchDetailsScreen,
+    //SearchDetailsScreen,
+    Details: {
+      screen: SearchDetailsScreen,
+      navigationOptions: ({ navigation }) => {
+        return { title: "Bussiness details" };
+      },
+    },
   },
   {
     initialRouteName: "Search",

@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import yelp from "../api/yelp";
+import EndpointTypeEnum from "../enums/EndpointTypeEnum";
 
-export default (RestauranId) => {
+export default ({option, restaurantId}) => {
   const [results, setResults] = useState([]);
   const [item, setItem] = useState(null);
   const [errorMessage, setErrorMessage] = useState("");
   const [showActivityIndicator, setStateActivityIndicator] = useState(false);
+  const [endpointTypeEnum] = EndpointTypeEnum();
 
   const searchAPI = async (searchTerm) => {
     setStateActivityIndicator(true);
     setErrorMessage(null);
     try {
+      //yelp.defaults.headers.post['Content-Type']= 'application/x-www-form-urlencoded';
       const response = await yelp.get("/businesses/search", {
         params: {
           term: searchTerm,
@@ -39,16 +42,25 @@ export default (RestauranId) => {
 
   //The good way!!! Execute only once time when component is already rendered
   useEffect(() => {
-    if (RestauranId == null) {
-      searchAPI("pasta");
-    } else {
-      getRestaurantInfo(RestauranId);
+    switch (option) {
+      case endpointTypeEnum.SearchApi:
+        searchAPI("pasta");
+        break;
+      case endpointTypeEnum.DetailsApi:
+        getRestaurantInfo(restaurantId);
+        break;
+      default:
+        searchAPI("pasta");
+        break;
     }
   }, []);
 
-  if (RestauranId == null) {
-    return [searchAPI, results, errorMessage, showActivityIndicator];
-  } else {
-    return [item, errorMessage, showActivityIndicator];
+  switch (option) {
+    case endpointTypeEnum.SearchApi:
+      return [searchAPI, results, errorMessage, showActivityIndicator];
+    case endpointTypeEnum.DetailsApi:
+      return [item, errorMessage, showActivityIndicator];
+    default:
+      return [item, errorMessage, showActivityIndicator];
   }
 };

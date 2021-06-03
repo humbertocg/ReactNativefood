@@ -3,18 +3,22 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   ActivityIndicator,
   ScrollView,
 } from "react-native";
 import SearchBar from "../components/SearchBar";
 import useResults from "../hooks/useResults";
 import ResultList from "../components/ResultList";
+import EndpointTypeEnum from "../enums/EndpointTypeEnum";
 
 const SearchScreen = () => {
   const [term, setTerm] = useState("");
-  const [searchAPI, results, errorMessage, showActivityIndicator] =
-    useResults(null);
+
+  const [endpointTypeEnum] = EndpointTypeEnum();
+  const [searchAPI, results, errorMessage, showActivityIndicator] = useResults({
+    option: endpointTypeEnum.SearchApi,
+    restaurantId: null,
+  });
 
   const filterResultsByPrice = (price) => {
     // price === '$' || '$$' || '$$$'
@@ -32,7 +36,11 @@ const SearchScreen = () => {
         onTermSubmit={() => searchAPI(term)}
       />
       {showActivityIndicator ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator
+          style={styles.indicator}
+          size="large"
+          color="#0000ff"
+        />
       ) : null}
 
       {results != null &&
@@ -76,6 +84,9 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
     marginVertical: 10,
     marginHorizontal: 15,
+  },
+  indicator: {
+    flex: 1,
   },
 });
 

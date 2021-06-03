@@ -8,16 +8,23 @@ import {
   ActivityIndicator,
 } from "react-native";
 import useResults from "../hooks/useResults";
+import EndpointTypeEnum from "../enums/EndpointTypeEnum";
 
 const SearchDetailsScreen = ({ navigation }) => {
-  const [item, errorMessage, showActivityIndicator] = useResults(
-    navigation.getParam("id")
-  );
+  const [endpointTypeEnum] = EndpointTypeEnum();
+  const [item, errorMessage, showActivityIndicator] = useResults({
+    option: endpointTypeEnum.DetailsApi,
+    restaurantId: navigation.getParam("id"),
+  });
 
   return (
-    <View>
+    <View style={styles.layout}>
       {showActivityIndicator ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator
+          style={styles.indicator}
+          size="large"
+          color="#0000ff"
+        />
       ) : null}
 
       {item != null &&
@@ -34,6 +41,7 @@ const SearchDetailsScreen = ({ navigation }) => {
               </View>
             );
           }}
+          ListFooterComponent={<View style={{ marginBottom: 15 }}></View>}
         />
       ) : null}
 
@@ -43,12 +51,16 @@ const SearchDetailsScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  layout: { backgroundColor: "white", flex: 1 },
   imageStyle: {
     height: 250,
     width: 250,
     borderRadius: 5,
     marginHorizontal: 15,
-    marginVertical: 15,
+    marginTop: 15,
+  },
+  indicator: {
+    flex: 1,
   },
 });
 

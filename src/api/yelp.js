@@ -8,6 +8,6 @@ const APIKey =
 export default axios.create({
   baseURL: "https://api.yelp.com/" + version,
   headers: {
-    Authorization: "Bearer " + APIKey,
+    Authorization: "Bearer " + APIKey//,'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/x-www-form-urlencoded'
   },
 });
